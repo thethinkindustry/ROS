@@ -1,0 +1,8 @@
+C:\Users\Kullanıcı1\Desktop\CallerID_demo_CSnet\Callerid_demo\bin\Debug\Callerid_demo.exe.config
+C:\Users\Kullanıcı1\Desktop\CallerID_demo_CSnet\Callerid_demo\bin\Debug\Callerid_demo.exe
+C:\Users\Kullanıcı1\Desktop\CallerID_demo_CSnet\Callerid_demo\bin\Debug\Callerid_demo.pdb
+C:\Users\Kullanıcı1\Desktop\CallerID_demo_CSnet\Callerid_demo\obj\x86\Debug\Callerid_demo.Form1.resources
+C:\Users\Kullanıcı1\Desktop\CallerID_demo_CSnet\Callerid_demo\obj\x86\Debug\Callerid_demo.Properties.Resources.resources
+C:\Users\Kullanıcı1\Desktop\CallerID_demo_CSnet\Callerid_demo\obj\x86\Debug\Callerid_demo.csproj.GenerateResource.Cache
+C:\Users\Kullanıcı1\Desktop\CallerID_demo_CSnet\Callerid_demo\obj\x86\Debug\Callerid_demo.exe
+C:\Users\Kullanıcı1\Desktop\CallerID_demo_CSnet\Callerid_demo\obj\x86\Debug\Callerid_demo.pdb

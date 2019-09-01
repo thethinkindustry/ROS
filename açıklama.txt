@@ -1,0 +1,15 @@
+
+Uygulama cid.dll ile birlikte dağıtılır. 
+
+Sadece caller ID cihazı kullanacak olanlar Cihaz kurulumu yapar.
+
+Cihaz kurulumu yapılmayanlarda her hangi bir hata çıkmaz.
+
+
+Gelen string virgül ile ayrılmıştır. Bu string parçalanarak kullanılır.
+
+
+cid.dll    bin klasörü içindedir. 
+32 bit DLL olduğu için uygulama da 32 bit olmalıdır. 
+Target x86 olmalıdır.
+
