@@ -18,7 +18,6 @@ namespace Callerid_demo
         DataTable table;
         SqlDataAdapter adapter;
         DataView dv;
-        SqlConnection cnn;
         string table_name = "";
         string sql = "";
         string connetionString;
@@ -26,8 +25,7 @@ namespace Callerid_demo
         {
             InitializeComponent();
             table_name = _table_name;
-            connetionString = "Data Source=.\\SQL_2014;Initial Catalog=db_ros;Integrated Security=True";
-            cnn = new SqlConnection(connetionString);
+            DatabaseManager.Connect();
             fill_tables();
         }
         void fill_tables()
@@ -35,11 +33,11 @@ namespace Callerid_demo
             int tables = 18;
             try
             {
-                if (cnn.State == ConnectionState.Closed)
+                if (DatabaseManager.connection.State == ConnectionState.Closed)
                 {
-                    cnn.Open();
+                    DatabaseManager.Open();
                 }
-                adapter = new SqlDataAdapter("SELECT * FROM tbl_tables ORDER BY table_name", cnn);
+                adapter = new SqlDataAdapter("SELECT * FROM tbl_tables ORDER BY table_name", DatabaseManager.connection);
                 table = new DataTable();
                 adapter.Fill(table);
                 tables = table.Rows.Count;
@@ -73,7 +71,7 @@ namespace Callerid_demo
                     g++;
                 }
                 adapter.Dispose();
-                cnn.Close();
+                DatabaseManager.Close();
                 is_table_busy();
 
             }
@@ -93,11 +91,11 @@ namespace Callerid_demo
                 if (ctrl is Button)
                 {
 
-                    if (cnn.State == ConnectionState.Closed)
+                    if (DatabaseManager.connection.State == ConnectionState.Closed)
                     {
-                        cnn.Open();
+                        DatabaseManager.Open();
                     }
-                    adapter = new SqlDataAdapter("SELECT * FROM tbl_onetable where table_name='" + ctrl.Name + "'", cnn);
+                    adapter = new SqlDataAdapter("SELECT * FROM tbl_onetable where table_name='" + ctrl.Name + "'", DatabaseManager.connection);
                     table = new DataTable();
                     adapter.Fill(table);
 
@@ -112,7 +110,7 @@ namespace Callerid_demo
                         ctrl.ForeColor = Color.White;
                     }
                     adapter.Dispose();
-                    cnn.Close();
+                    DatabaseManager.Close();
                 }
             }
         }
@@ -126,17 +124,17 @@ namespace Callerid_demo
         {
             try
             {
-                if (cnn.State == ConnectionState.Closed)
+                if (DatabaseManager.connection.State == ConnectionState.Closed)
                 {
-                    cnn.Open();
+                    DatabaseManager.Open();
                 }
 
                 sql = "UPDATE tbl_onetable SET table_name=@table_name WHERE table_name='" + table_name + "'";
-                command = new SqlCommand(sql, cnn);
+                command = new SqlCommand(sql, DatabaseManager.connection);
                 command.Parameters.Add(new SqlParameter("@table_name", clickedButton));
                 command.ExecuteNonQuery();
                 command.Dispose();
-                cnn.Close();
+                DatabaseManager.Close();
                 this.Close();
             }
             catch (Exception ex)

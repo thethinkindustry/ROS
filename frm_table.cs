@@ -12,7 +12,6 @@ namespace Callerid_demo
 {
     public partial class frm_table : MetroForm
     {
-        SqlConnection cnn;
         SqlCommand command;
         SqlDataReader dataReader;
         DataTable table;
@@ -26,9 +25,8 @@ namespace Callerid_demo
             InitializeComponent();
             _table = table_name;
              dgv_table_init();
-            
-            connetionString = "Data Source=.\\SQL_2014;Initial Catalog=db_ros;Integrated Security=True";
-            cnn = new SqlConnection(connetionString);
+
+            DatabaseManager.Connect();
             calculator();
 
         }
@@ -107,12 +105,12 @@ namespace Callerid_demo
             try
             {
 
-                cnn.Open();
+                DatabaseManager.Open();
                 sql = "DELETE FROM tbl_onetable WHERE onetable_id=" + id + "";
-                command = new SqlCommand(sql, cnn);
+                command = new SqlCommand(sql, DatabaseManager.connection);
                 command.ExecuteNonQuery();
                 command.Dispose();
-                cnn.Close();
+                DatabaseManager.Close();
                 dgv_table.Rows.RemoveAt(dgv_table.CurrentRow.Index);
 
             }
@@ -127,18 +125,18 @@ namespace Callerid_demo
         {
             try
             {
-                if (cnn.State == ConnectionState.Closed)
+                if (DatabaseManager.connection.State == ConnectionState.Closed)
                 {
-                    cnn.Open();
+                    DatabaseManager.Open();
                 }
                 sql = "UPDATE tbl_onetable SET prod_num=@prod_num,prod_price=@prod_price WHERE onetable_id=@onetable_id";
-                command = new SqlCommand(sql, cnn);
+                command = new SqlCommand(sql, DatabaseManager.connection);
                 command.Parameters.Add(new SqlParameter("@prod_num", number));
                 command.Parameters.Add(new SqlParameter("@prod_price", price));
                 command.Parameters.Add(new SqlParameter("@onetable_id", id));
                 command.ExecuteNonQuery();
                 command.Dispose();
-                cnn.Close();
+                DatabaseManager.Close();
 
             }
             catch (Exception ex)
@@ -151,15 +149,15 @@ namespace Callerid_demo
         {
             try
             {
-                if (cnn.State == ConnectionState.Closed)
+                if (DatabaseManager.connection.State == ConnectionState.Closed)
                 {
-                    cnn.Open();
+                    DatabaseManager.Open();
                 }
-                adapter = new SqlDataAdapter("SELECT * FROM tbl_cat", cnn);
+                adapter = new SqlDataAdapter("SELECT * FROM tbl_cat", DatabaseManager.connection);
                 table = new DataTable();
                 adapter.Fill(table);
                 adapter.Dispose();
-                cnn.Close();
+                DatabaseManager.Close();
                 cb_cat.DataSource = table;
                 cb_cat.DisplayMember = "cat_name";
 
@@ -179,13 +177,13 @@ namespace Callerid_demo
                 string table_name = "", prod_id = "", num = "", name = "", price = "", id = "";
 
 
-                if (cnn.State == ConnectionState.Closed)
+                if (DatabaseManager.connection.State == ConnectionState.Closed)
                 {
-                    cnn.Open();
+                    DatabaseManager.Open();
                 }
 
                 sql = "SELECT table_name,tbl_onetable.prod_id,prod_num,prod_name,tbl_onetable.prod_price, onetable_id  FROM tbl_onetable INNER JOIN tbl_prod ON tbl_prod.prod_id=tbl_onetable.prod_id where table_name='" + _table_name + "' ";
-                command = new SqlCommand(sql, cnn);
+                command = new SqlCommand(sql, DatabaseManager.connection);
                 dataReader = command.ExecuteReader();
                 while (dataReader.Read())
                 {
@@ -200,7 +198,7 @@ namespace Callerid_demo
                     dgv_table.Rows.Add(row1);
                 }
                 dataReader.Close();
-                cnn.Close();
+                DatabaseManager.Close();
             }
             catch (Exception ex)
             {
@@ -211,17 +209,17 @@ namespace Callerid_demo
         private void FillDgv_prod()
         {
 
-            if (cnn.State == ConnectionState.Closed)
+            if (DatabaseManager.connection.State == ConnectionState.Closed)
             {
-                cnn.Open();
+                DatabaseManager.Open();
             }
-            adapter = new SqlDataAdapter("SELECT prod_id,prod_name,prod_price,imagine FROM tbl_prod where cat_name='" + cb_cat.Text + "'", cnn);
+            adapter = new SqlDataAdapter("SELECT prod_id,prod_name,prod_price,imagine FROM tbl_prod where cat_name='" + cb_cat.Text + "'", DatabaseManager.connection);
             table = new DataTable();
             adapter.Fill(table);
             dgv_prod.RowTemplate.Height = 100;
             dgv_prod.DataSource = table;
             adapter.Dispose();
-            cnn.Close();
+            DatabaseManager.Close();
             DataGridViewImageColumn imageColumn = new DataGridViewImageColumn();
             imageColumn = (DataGridViewImageColumn)dgv_prod.Columns[3];
             imageColumn.ImageLayout = DataGridViewImageCellLayout.Stretch;
@@ -312,12 +310,12 @@ namespace Callerid_demo
         {
             try
             {
-                if (cnn.State == ConnectionState.Closed)
+                if (DatabaseManager.connection.State == ConnectionState.Closed)
                 {
-                    cnn.Open();
+                    DatabaseManager.Open();
                 }
                 sql = "INSERT INTO tbl_onetable(table_name,prod_num,prod_id,prod_price)Values(@table_name,@prod_num,@prod_id,@prod_price)";
-                command = new SqlCommand(sql, cnn);
+                command = new SqlCommand(sql, DatabaseManager.connection);
                 command.Parameters.Add(new SqlParameter("@table_name", row[0]));
                 command.Parameters.Add(new SqlParameter("@prod_id", int.Parse(row[1])));
                 command.Parameters.Add(new SqlParameter("@prod_num", int.Parse(row[2])));
@@ -326,19 +324,19 @@ namespace Callerid_demo
 
                 int id = 0;
                 sql = "SELECT TOP(1) onetable_id  FROM tbl_onetable  order by onetable_id desc ";
-                command = new SqlCommand(sql, cnn);
+                command = new SqlCommand(sql, DatabaseManager.connection);
                 dataReader = command.ExecuteReader();
                 if (dataReader.Read())
                 {
                     id = int.Parse(dataReader["onetable_id"].ToString());
                 }
                 dataReader.Close();
-                cnn.Close();
+                DatabaseManager.Close();
                 return id;
             }
             catch (Exception ex)
             {
-                cnn.Close();
+                DatabaseManager.Close();
                 MessageBox.Show(ex.Message);
                 throw;
             }

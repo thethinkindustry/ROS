@@ -15,7 +15,6 @@ namespace Callerid_demo
     public partial class frm_settings : MetroForm
     {
         string imgLoc;
-        SqlConnection cnn;
         SqlCommand command;
         SqlDataReader dataReader;
         DataTable table;
@@ -25,9 +24,7 @@ namespace Callerid_demo
         string sql;
         public frm_settings()
         {
-            InitializeComponent();
-            connetionString = "Data Source=.\\SQL_2014;Initial Catalog=db_ros;Integrated Security=True";
-            cnn = new SqlConnection(connetionString);
+            DatabaseManager.Connect();
         }
 
         private void frm_settings_Load(object sender, EventArgs e)
@@ -47,16 +44,16 @@ namespace Callerid_demo
                 case 0:
                     try
                     {
-                        if (cnn.State == ConnectionState.Closed)
+                        if (DatabaseManager.connection.State == ConnectionState.Closed)
                         {
-                            cnn.Open();
+                            DatabaseManager.Open();
                         }
-                        adapter = new SqlDataAdapter("SELECT * FROM tbl_tables", cnn);
+                        adapter = new SqlDataAdapter("SELECT * FROM tbl_tables", DatabaseManager.connection);
                         table = new DataTable();
                         adapter.Fill(table);
                         dgv_tables.DataSource = table;
                         adapter.Dispose();
-                        cnn.Close();
+                        DatabaseManager.Close();
                         dgv_tables.Columns[0].HeaderText = "ID";
                         dgv_tables.Columns[1].HeaderText = "Masa Numarası";
 
@@ -71,16 +68,16 @@ namespace Callerid_demo
                 case 1:
                     try
                     {
-                        if (cnn.State == ConnectionState.Closed)
+                        if (DatabaseManager.connection.State == ConnectionState.Closed)
                         {
-                            cnn.Open();
+                            DatabaseManager.Open();
                         }
-                        adapter = new SqlDataAdapter("SELECT * FROM tbl_cat", cnn);
+                        adapter = new SqlDataAdapter("SELECT * FROM tbl_cat", DatabaseManager.connection);
                         table = new DataTable();
                         adapter.Fill(table);
                         dgv_cat.DataSource = table;
                         adapter.Dispose();
-                        cnn.Close();
+                        DatabaseManager.Close();
                         cb_cat.DataSource = table;
                         cb_cat.DisplayMember = "cat_name";
                         dgv_cat.Columns[0].HeaderText = "ID";
@@ -106,19 +103,19 @@ namespace Callerid_demo
               
                 try
                 {
-                    cnn.Open();
+                    DatabaseManager.Open();
                     sql = "INSERT tbl_tables(table_name) VALUES(@tbl_name)";
-                    command = new SqlCommand(sql, cnn);
+                    command = new SqlCommand(sql, DatabaseManager.connection);
                     command.Parameters.Add(new SqlParameter("@tbl_name", txt_table.Text));
                     command.ExecuteNonQuery();
                     command.Dispose();
-                    cnn.Close();
+                    DatabaseManager.Close();
                     metroTabControl1_SelectedIndexChanged(sender, e);
                 }
                 catch (Exception ex)
                 {
 
-                    cnn.Close();
+                    DatabaseManager.Close();
                     MessageBox.Show("Hata " + ex);
 
                 }
@@ -147,12 +144,12 @@ namespace Callerid_demo
                 try
                 {
                     int table_id = int.Parse(dgv_tables.CurrentRow.Cells[0].Value.ToString());
-                    cnn.Open();
+                    DatabaseManager.Open();
                     sql = "DELETE FROM tbl_tables  WHERE table_id=" + table_id + "";
-                    command = new SqlCommand(sql, cnn);
+                    command = new SqlCommand(sql, DatabaseManager.connection);
                     command.ExecuteNonQuery();
                     command.Dispose();
-                    cnn.Close();
+                    DatabaseManager.Close();
                     metroTabControl1_SelectedIndexChanged(sender, e);
 
                 }
@@ -208,9 +205,9 @@ namespace Callerid_demo
 
                 try
                 {
-                    if (cnn.State == ConnectionState.Closed)
+                    if (DatabaseManager.connection.State == ConnectionState.Closed)
                     {
-                        cnn.Open();
+                        DatabaseManager.Open();
                     }
                     byte[] img = null;
                     if (!string.IsNullOrEmpty(imgLoc))
@@ -224,13 +221,13 @@ namespace Callerid_demo
                        img= ImageToByte(picProd.Image);
                     }
                         sql = "INSERT INTO tbl_prod(cat_name,imagine,prod_name,prod_price)Values(@cat_name,@imagine,@prod_name,@prod_price)";
-                        command = new SqlCommand(sql, cnn);
+                        command = new SqlCommand(sql, DatabaseManager.connection);
                         command.Parameters.Add(new SqlParameter("@cat_name", cb_cat.Text));
                         command.Parameters.Add(new SqlParameter("@imagine", img));
                         command.Parameters.Add(new SqlParameter("@prod_name", txt_prod_name.Text));
                         command.Parameters.Add(new SqlParameter("@prod_price", int.Parse(txt_prod_price.Text)));
                         int x = command.ExecuteNonQuery();
-                        cnn.Close();
+                        DatabaseManager.Close();
                         MessageBox.Show(x.ToString() + "ürün eklendi.");
 
                         FillDgv_prod();
@@ -240,7 +237,7 @@ namespace Callerid_demo
                 }
                 catch (Exception ex)
                 {
-                    cnn.Close();
+                    DatabaseManager.Close();
                     MessageBox.Show(ex.Message);
                     throw;
                 }
@@ -254,17 +251,17 @@ namespace Callerid_demo
         void FillDgv_prod()
         {
 
-            if (cnn.State == ConnectionState.Closed)
+            if (DatabaseManager.connection.State == ConnectionState.Closed)
             {
-                cnn.Open();
+                DatabaseManager.Open();
             }
-            adapter = new SqlDataAdapter("SELECT prod_id,prod_name,prod_price,imagine FROM tbl_prod where cat_name='" + dgv_cat.CurrentRow.Cells[1].Value.ToString() + "'", cnn);
+            adapter = new SqlDataAdapter("SELECT prod_id,prod_name,prod_price,imagine FROM tbl_prod where cat_name='" + dgv_cat.CurrentRow.Cells[1].Value.ToString() + "'", DatabaseManager.connection);
             table = new DataTable();
             adapter.Fill(table);
             dgv_prod.RowTemplate.Height = 100;
             dgv_prod.DataSource = table;
             adapter.Dispose();
-            cnn.Close();
+            DatabaseManager.Close();
             DataGridViewImageColumn imageColumn = new DataGridViewImageColumn();
             imageColumn = (DataGridViewImageColumn)dgv_prod.Columns[3];
             imageColumn.ImageLayout = DataGridViewImageCellLayout.Stretch;
@@ -281,20 +278,20 @@ namespace Callerid_demo
             {
                 try
                 {
-                    cnn.Open();
+                    DatabaseManager.Open();
                     sql = "INSERT tbl_cat(cat_name) VALUES(@cat_name)";
-                    command = new SqlCommand(sql, cnn);
+                    command = new SqlCommand(sql, DatabaseManager.connection);
                     command.Parameters.Add(new SqlParameter("@cat_name", txt_cat.Text));
                     command.ExecuteNonQuery();
                     command.Dispose();
-                    cnn.Close();
+                    DatabaseManager.Close();
                     metroTabControl1_SelectedIndexChanged(sender, e);
                     txt_cat.Clear();
                 }
                 catch (Exception ex)
                 {
 
-                    cnn.Close();
+                    DatabaseManager.Close();
                     MessageBox.Show("Hata " + ex);
 
                 }
@@ -318,12 +315,12 @@ namespace Callerid_demo
                     try
                     {
                         int cat_id = int.Parse(dgv_cat.CurrentRow.Cells[0].Value.ToString());
-                        cnn.Open();
+                        DatabaseManager.Open();
                         sql = "DELETE FROM tbl_cat  WHERE cat_id=" + cat_id + "";
-                        command = new SqlCommand(sql, cnn);
+                        command = new SqlCommand(sql, DatabaseManager.connection);
                         command.ExecuteNonQuery();
                         command.Dispose();
-                        cnn.Close();
+                        DatabaseManager.Close();
                         metroTabControl1_SelectedIndexChanged(sender, e);
 
                     }
@@ -365,12 +362,12 @@ namespace Callerid_demo
                     try
                     {
                         int id =int.Parse( dgv_prod.CurrentRow.Cells[0].Value.ToString());
-                        cnn.Open();
+                        DatabaseManager.Open();
                         sql = "DELETE FROM tbl_prod  WHERE prod_id='" + id + "'";
-                        command = new SqlCommand(sql, cnn);
+                        command = new SqlCommand(sql, DatabaseManager.connection);
                         command.ExecuteNonQuery();
                         command.Dispose();
-                        cnn.Close();
+                        DatabaseManager.Close();
                         metroTabControl1_SelectedIndexChanged(sender, e);
                         txt_prod_name.Clear();
                         txt_prod_price.Clear();
@@ -395,12 +392,12 @@ namespace Callerid_demo
                 try
                 {
                     byte[] img = ImageToByte(picProd.Image);
-                    if (cnn.State==ConnectionState.Closed)
+                    if (DatabaseManager.connection.State==ConnectionState.Closed)
                     {
-                        cnn.Open();
+                        DatabaseManager.Open();
                     }
                     sql = "UPDATE tbl_prod SET prod_name=@prod_name,prod_price=@prod_price,cat_name=@cat_name,imagine=@image WHERE prod_id=@prod_id";
-                    command = new SqlCommand(sql, cnn);
+                    command = new SqlCommand(sql, DatabaseManager.connection);
                     command.Parameters.Add(new SqlParameter("@prod_name", txt_prod_name.Text));
                     command.Parameters.Add(new SqlParameter("@prod_price", float.Parse(txt_prod_price.Text)));
                     command.Parameters.Add(new SqlParameter("@cat_name",cb_cat.Text ));
@@ -408,7 +405,7 @@ namespace Callerid_demo
                     command.Parameters.Add(new SqlParameter("@prod_id", dgv_prod.CurrentRow.Cells[0].Value));
                     command.ExecuteNonQuery();
                     command.Dispose();
-                    cnn.Close();
+                    DatabaseManager.Close();
                     txt_prod_name.Clear();
                     txt_prod_price.Clear();
                     picProd.Image = Callerid_demo.Resource_picture.noimage;

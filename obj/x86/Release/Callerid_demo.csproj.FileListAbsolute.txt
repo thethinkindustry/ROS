@@ -28,3 +28,23 @@ C:\Users\m98tu\Documents\Visual Studio 2015\Projects\caller id\Callerid_demo\obj
 C:\Users\m98tu\Documents\Visual Studio 2015\Projects\caller id\Callerid_demo\obj\x86\Release\Callerid_demo.frm_settings.resources
 C:\Users\m98tu\Documents\Visual Studio 2015\Projects\caller id\Callerid_demo\obj\x86\Release\Callerid_demo.frm_table.resources
 C:\Users\m98tu\Documents\Visual Studio 2015\Projects\caller id\Callerid_demo\obj\x86\Release\Callerid_demo.frm_tableMove.resources
+C:\Users\ThinkPad\Source\Repos\ROS\obj\x86\Release\Callerid_demo.csprojAssemblyReference.cache
+C:\Users\ThinkPad\Source\Repos\ROS\obj\x86\Release\Callerid_demo.Form1.resources
+C:\Users\ThinkPad\Source\Repos\ROS\obj\x86\Release\Callerid_demo.frm_main.resources
+C:\Users\ThinkPad\Source\Repos\ROS\obj\x86\Release\Callerid_demo.frm_proc.resources
+C:\Users\ThinkPad\Source\Repos\ROS\obj\x86\Release\Callerid_demo.frm_settings.resources
+C:\Users\ThinkPad\Source\Repos\ROS\obj\x86\Release\Callerid_demo.frm_table.resources
+C:\Users\ThinkPad\Source\Repos\ROS\obj\x86\Release\Callerid_demo.frm_tableMove.resources
+C:\Users\ThinkPad\Source\Repos\ROS\obj\x86\Release\Callerid_demo.Properties.Resources.resources
+C:\Users\ThinkPad\Source\Repos\ROS\obj\x86\Release\Callerid_demo.Resource_picture.resources
+C:\Users\ThinkPad\Source\Repos\ROS\obj\x86\Release\Callerid_demo.csproj.GenerateResource.cache
+C:\Users\ThinkPad\Source\Repos\ROS\obj\x86\Release\Callerid_demo.csproj.CoreCompileInputs.cache
+C:\Users\ThinkPad\Source\Repos\ROS\obj\x86\Release\Callerid_demo.exe
+C:\Users\ThinkPad\Source\Repos\ROS\obj\x86\Release\Callerid_demo.pdb
+C:\Users\ThinkPad\Source\Repos\ROS\bin\Release\Callerid_demo.exe.config
+C:\Users\ThinkPad\Source\Repos\ROS\bin\Release\Callerid_demo.exe
+C:\Users\ThinkPad\Source\Repos\ROS\bin\Release\Callerid_demo.pdb
+C:\Users\ThinkPad\Source\Repos\ROS\bin\Release\MetroFramework.Design.dll
+C:\Users\ThinkPad\Source\Repos\ROS\bin\Release\MetroFramework.dll
+C:\Users\ThinkPad\Source\Repos\ROS\bin\Release\MetroFramework.Fonts.dll
+C:\Users\ThinkPad\Source\Repos\ROS\obj\x86\Release\Callerid_demo.csproj.CopyComplete

@@ -13,7 +13,6 @@ namespace Callerid_demo
     public partial class frm_proc : MetroForm
     {
 
-        SqlConnection cnn;
         SqlCommand command;
         SqlDataReader dataReader;
         DataTable table;
@@ -24,8 +23,7 @@ namespace Callerid_demo
         public frm_proc()
         {
             InitializeComponent();
-            connetionString = "Data Source=.\\SQL_2014;Initial Catalog=db_ros;Integrated Security=True";
-            cnn = new SqlConnection(connetionString);
+            DatabaseManager.Connect();
         }
         private void frm_proc_Load(object sender, EventArgs e)
         {
@@ -56,15 +54,15 @@ namespace Callerid_demo
         {
             try
             {
-                if (cnn.State == ConnectionState.Closed)
+                if (DatabaseManager.connection.State == ConnectionState.Closed)
                 {
-                    cnn.Open();
+                    DatabaseManager.Open();
                 }
-                adapter = new SqlDataAdapter("SELECT * FROM tbl_cat", cnn);
+                adapter = new SqlDataAdapter("SELECT * FROM tbl_cat", DatabaseManager.connection);
                 table = new DataTable();
                 adapter.Fill(table);
                 adapter.Dispose();
-                cnn.Close();
+                DatabaseManager.Close();
                 cb_cat.DataSource = table;
                 cb_cat.DisplayMember = "cat_name";
 
@@ -80,11 +78,11 @@ namespace Callerid_demo
             int tables = 18;
             try
             {
-                if (cnn.State == ConnectionState.Closed)
+                if (DatabaseManager.connection.State == ConnectionState.Closed)
                 {
-                    cnn.Open();
+                    DatabaseManager.Open();
                 }
-                adapter = new SqlDataAdapter("SELECT * FROM tbl_tables ORDER BY table_name", cnn);
+                adapter = new SqlDataAdapter("SELECT * FROM tbl_tables ORDER BY table_name", DatabaseManager.connection);
                 table = new DataTable();
                 adapter.Fill(table);
                 tables = table.Rows.Count;
@@ -118,7 +116,7 @@ namespace Callerid_demo
                     g++;
                 }
                 adapter.Dispose();
-                cnn.Close();
+                DatabaseManager.Close();
                 is_table_busy();
 
             }
@@ -138,11 +136,11 @@ namespace Callerid_demo
                 if (ctrl is Button)
                 {
 
-                    if (cnn.State == ConnectionState.Closed)
+                    if (DatabaseManager.connection.State == ConnectionState.Closed)
                     {
-                        cnn.Open();
+                        DatabaseManager.Open();
                     }
-                    adapter = new SqlDataAdapter("SELECT * FROM tbl_onetable where table_name='" + ctrl.Name + "'", cnn);
+                    adapter = new SqlDataAdapter("SELECT * FROM tbl_onetable where table_name='" + ctrl.Name + "'", DatabaseManager.connection);
                     table = new DataTable();
                     adapter.Fill(table);
                 
@@ -157,7 +155,7 @@ namespace Callerid_demo
                         ctrl.ForeColor = Color.White;
                     }
                     adapter.Dispose();
-                    cnn.Close();
+                    DatabaseManager.Close();
                 }
             }
         }
@@ -230,12 +228,12 @@ namespace Callerid_demo
             try
             {
 
-                cnn.Open();
+                DatabaseManager.Open();
                 sql = "DELETE FROM tbl_onetable WHERE onetable_id=" + id + "";
-                command = new SqlCommand(sql, cnn);
+                command = new SqlCommand(sql, DatabaseManager.connection);
                 command.ExecuteNonQuery();
                 command.Dispose();
-                cnn.Close();
+                DatabaseManager.Close();
                 dgv_table.Rows.RemoveAt(dgv_table.CurrentRow.Index);
 
             }
@@ -250,18 +248,18 @@ namespace Callerid_demo
         {
             try
             {
-                if (cnn.State == ConnectionState.Closed)
+                if (DatabaseManager.connection.State == ConnectionState.Closed)
                 {
-                    cnn.Open();
+                    DatabaseManager.Open();
                 }
                 sql = "UPDATE tbl_onetable SET prod_num=@prod_num,prod_price=@prod_price WHERE onetable_id=@onetable_id";
-                command = new SqlCommand(sql, cnn);
+                command = new SqlCommand(sql, DatabaseManager.connection);
                 command.Parameters.Add(new SqlParameter("@prod_num", number));
                 command.Parameters.Add(new SqlParameter("@prod_price", price));
                 command.Parameters.Add(new SqlParameter("@onetable_id", id));
                 command.ExecuteNonQuery();
                 command.Dispose();
-                cnn.Close();
+                DatabaseManager.Close();
 
             }
             catch (Exception ex)
@@ -292,17 +290,17 @@ namespace Callerid_demo
         private void FillDgv_prod()
         {
 
-            if (cnn.State == ConnectionState.Closed)
+            if (DatabaseManager.connection.State == ConnectionState.Closed)
             {
-                cnn.Open();
+                DatabaseManager.Open();
             }
-            adapter = new SqlDataAdapter("SELECT prod_id,prod_name,prod_price,imagine FROM tbl_prod where cat_name='" + cb_cat.Text + "'", cnn);
+            adapter = new SqlDataAdapter("SELECT prod_id,prod_name,prod_price,imagine FROM tbl_prod where cat_name='" + cb_cat.Text + "'", DatabaseManager.connection);
             table = new DataTable();
             adapter.Fill(table);
             dgv_prod.RowTemplate.Height = 100;
             dgv_prod.DataSource = table;
             adapter.Dispose();
-            cnn.Close();
+            DatabaseManager.Close();
             DataGridViewImageColumn imageColumn = new DataGridViewImageColumn();
             imageColumn = (DataGridViewImageColumn)dgv_prod.Columns[3];
             imageColumn.ImageLayout = DataGridViewImageCellLayout.Stretch;
